@@ -1,60 +1,41 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
 
-// 從 Vercel 環境變數讀取 Token，如果沒設會報錯
-const LINE_ACCESS_TOKEN = process.env.LINE_CHANNEL_ACCESS_TOKEN;
-
-// 填入你拿到的 Rich Menu ID
-const MENU_MAIN = "richmenu-19209952";
-const MENU_SOCIAL = "richmenu-19209959";
-
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  // 只處理 POST 請求 (LINE 傳過來的)
-  if (req.method !== 'POST') {
-    return res.status(200).send('Webhook Server is Running!');
-  }
+  if (req.method !== 'POST') return res.status(200).send('OK');
 
-  try {
-    const events = req.body.events;
-    console.log('收到 LINE 事件:', JSON.stringify(events));
+  const events = req.body.events;
+  if (!events || events.length === 0) return res.status(200).send('OK');
 
-    for (const event of events) {
-      const userId = event.source.userId;
+  const event = events[0];
+  const userId = event.source.userId;
 
-      // 🕵️ 偵測：文字暗號「我要看社會科」
-      if (event.type === 'message' && event.message.type === 'text' && event.message.text === '我要看社會科') {
-        console.log(`用戶 ${userId} 請求切換至社會選單`);
-        await switchMenu(userId, MENU_SOCIAL);
-      } 
-      
-      // 🕵️ 偵測：文字暗號「回主選單」
-      else if (event.type === 'message' && event.message.type === 'text' && event.message.text === '回主選單') {
-        console.log(`用戶 ${userId} 請求回到主選單`);
-        await switchMenu(userId, MENU_MAIN);
-      }
+  // 1. 偵測文字暗號
+  if (event.type === 'message' && event.message.type === 'text') {
+    const text = event.message.text;
+
+    // 切換至社會科選單
+    if (text.includes('社會')) {
+      await switchMenu(userId, process.env.MENU_SOCIAL!);
+    } 
+    // 切換回主選單
+    else if (text.includes('主選單') || text.includes('返回')) {
+      await switchMenu(userId, process.env.MENU_MAIN!);
     }
-
-    return res.status(200).send('OK');
-  } catch (error) {
-    console.error('Webhook Error:', error);
-    return res.status(500).send('Internal Server Error');
   }
+
+  return res.status(200).send('OK');
 }
 
-// 🚀 API 呼叫：幫特定用戶綁定圖文選單
 async function switchMenu(userId: string, menuId: string) {
   const url = `https://api.line.me/v2/bot/user/${userId}/richmenu/${menuId}`;
   
   const response = await fetch(url, {
     method: 'POST',
     headers: {
-      'Authorization': `Bearer ${LINE_ACCESS_TOKEN}`,
+      'Authorization': `Bearer ${process.env.LINE_CHANNEL_ACCESS_TOKEN}`,
     },
   });
 
-  if (!response.ok) {
-    const errorData = await response.text();
-    console.error(`切換選單失敗 (${menuId}):`, errorData);
-  } else {
-    console.log(`成功切換選單: ${menuId}`);
-  }
+  const result = await response.text();
+  console.log(`切換狀態: ${response.status}, 結果: ${result}`);
 }
