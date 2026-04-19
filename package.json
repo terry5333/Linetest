@@ -1,0 +1,21 @@
+{
+  "name": "terryedu-line-menu-test",
+  "version": "1.0.0",
+  "description": "TerryEdu LINE Rich Menu Switch Test",
+  "main": "api/webhook.ts",
+  "scripts": {
+    "build": "tsc",
+    "start": "node api/webhook.ts"
+  },
+  "dependencies": {
+    "@vercel/node": "^3.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "@types/node": "^20.0.0"
+  },
+  "engines": {
+    "node": "20.x"
+  }
+}
+
