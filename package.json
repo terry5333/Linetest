@@ -4,8 +4,7 @@
   "description": "TerryEdu LINE Rich Menu Switch Test",
   "main": "api/webhook.ts",
   "scripts": {
-    "build": "tsc",
-    "start": "node api/webhook.ts"
+    "build": "echo 'Vercel will handle compilation'"
   },
   "dependencies": {
     "@vercel/node": "^3.0.0"
@@ -18,4 +17,3 @@
     "node": "20.x"
   }
 }
-
