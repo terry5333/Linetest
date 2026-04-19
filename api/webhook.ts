@@ -4,8 +4,8 @@ import { VercelRequest, VercelResponse } from '@vercel/node';
 const LINE_ACCESS_TOKEN = process.env.LINE_CHANNEL_ACCESS_TOKEN;
 
 // 填入你拿到的 Rich Menu ID
-const MENU_MAIN = "richmenu-你的主選單ID";
-const MENU_SOCIAL = "richmenu-你的社會選單ID";
+const MENU_MAIN = "richmenu-19209952";
+const MENU_SOCIAL = "richmenu-19209959";
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   // 只處理 POST 請求 (LINE 傳過來的)
