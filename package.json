@@ -1,10 +1,9 @@
 {
   "name": "terryedu-line-menu-test",
   "version": "1.0.0",
-  "description": "TerryEdu LINE Rich Menu Switch Test",
   "main": "api/webhook.ts",
   "scripts": {
-    "build": "echo 'Vercel will handle compilation'"
+    "build": "mkdir -p public && echo '<html><body>API is running</body></html>' > public/index.html"
   },
   "dependencies": {
     "@vercel/node": "^3.0.0"
